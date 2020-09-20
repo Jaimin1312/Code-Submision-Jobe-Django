@@ -1,0 +1,82 @@
+  
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Editor</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<style type="text/css" media="screen">
+    #editor { 
+        position: absolute;
+        top: 50px;
+        right: 100px;
+        bottom: 50px;
+        left: 400px;
+    }
+</style>
+</head>
+<body>
+    <a href="javascript:void(0);" class="submitbutton btn btn-danger " >Run</a>
+    <br> <br>
+Output:  
+<br>
+<div class="col-md-4">
+    <pre>{{output}}</pre>
+</div>
+
+<br>
+
+<form action="/" id="submitform" method="POST">
+ {%csrf_token%}
+ {%if code is None%}
+<div id="editor" style="font-size:15px;border:1px solid black">class Main
+{                
+    public static void main(String [] args)
+    {
+        
+    }
+}</div>
+ {%elif code is not None%}
+ <div id="editor" style="font-size:15px;border:1px solid black">{{code}}</div>
+    {%endif%}   
+    
+   
+
+<input type="hidden" id="codevalue" class="codevalue" name="codevalue" />
+
+</form>
+
+
+
+    
+<script src="{% static 'js/ace.js'%}" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(document).ready(function(){
+
+        console.log(editor.getSession().getValue());
+        $('#codevalue').val(editor.getSession().getValue()); 
+      });
+
+     
+      $(".submitbutton").each(function(){
+        $(this).on("click",function(){
+           
+               $('#submitform').submit()
+        });
+    });
+
+
+        var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/eclipse");
+    editor.session.setMode("ace/mode/java");
+    editor.getSession().on("change", function () {
+        console.log(editor.getSession().getValue());
+        $('#codevalue').val(editor.getSession().getValue()); 
+});
+
+</script>
+
+</body>
+</html>
